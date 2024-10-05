@@ -1,6 +1,6 @@
 const Header = ({ name }) => {
   return <h1>{name}</h1>
-};
+}
 
 const Content = ({ parts }) => {
   return (
@@ -9,21 +9,21 @@ const Content = ({ parts }) => {
       <Part part={parts[1]} />
       <Part part={parts[2]} />
     </div>
-  );
-};
+  )
+}
 
 const Part = ({ part }) => {
   return (
     <p>
       {part.name} {part.exercises}
     </p>
-  );
-};
+  )
+}
 
 const Total = ({ parts }) => {
   const total = parts[0].exercises + parts[1].exercises + parts[2].exercises;
   return <p>Number of exercises {total}</p>
-};
+}
 
 const App = () => {
   const course = {
