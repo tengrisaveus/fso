@@ -1,6 +1,5 @@
 const config = require('./utils/config')
 const express = require('express')
-const app = express()
 const cors = require('cors')
 require('express-async-errors')
 const blogsRouter = require('./controllers/blogs')
@@ -9,6 +8,8 @@ const loginRouter = require('./controllers/login')
 const middleware = require('./utils/middleware')
 const logger = require('./utils/logger')
 const mongoose = require('mongoose')
+
+const app = express()
 
 mongoose.set('strictQuery', false)
 
