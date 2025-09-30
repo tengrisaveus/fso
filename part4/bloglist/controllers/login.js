@@ -3,7 +3,12 @@ const bcrypt = require('bcrypt')
 const loginRouter = require('express').Router()
 const User = require('../models/user')
 
-loginRouter.post('/', async (request, response) => {
+// Async error wrapper function
+const asyncErrorHandler = (fn) => (req, res, next) => {
+  Promise.resolve(fn(req, res, next)).catch(next)
+}
+
+loginRouter.post('/', asyncErrorHandler(async (request, response) => {
   const { username, password } = request.body
 
   const user = await User.findOne({ username })
@@ -24,6 +29,6 @@ loginRouter.post('/', async (request, response) => {
   const token = jwt.sign(userForToken, process.env.SECRET)
 
   response.status(200).send({ token, username: user.username, name: user.name })
-})
+}))
 
 module.exports = loginRouter

@@ -37,27 +37,30 @@ const getTokenFrom = request => {
   return null
 }
 
-const userExtractor = async (request, response, next) => {
-  const token = getTokenFrom(request)
+const userExtractor = (request, response, next) => {
+  const asyncHandler = async () => {
+    const token = getTokenFrom(request)
 
-  if (!token) {
-    return response.status(401).json({ error: 'token missimg' })
+    if (!token) {
+      return response.status(401).json({ error: 'token missimg' })
+    }
+
+    const decodedToken = jwt.verify(token, process.env.SECRET)
+    if (!decodedToken.id) {
+      return response.status(401).json({ error: 'token invalid' })
+    }
+
+    const user = await User.findById(decodedToken.id)
+
+    if (!user) {
+      return response.status(401).json({ error: 'user not found' })
+    }
+
+    request.user = user
+    next()
   }
 
-  const decodedToken = jwt.verify(token, process.env.SECRET)
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: 'token invalid' })
-  }
-
-  const user = await User.findById(decodedToken.id)
-
-  if (!user) {
-    return response.status(401).json({ error: 'user not found' })
-  }
-
-  request.user = user
-
-  next()
+  asyncHandler().catch(next)
 }
 
 module.exports = {

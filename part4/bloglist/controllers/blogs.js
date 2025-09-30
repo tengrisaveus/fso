@@ -2,6 +2,11 @@ const Blog = require('../models/blog')
 const blogsRouter = require('express').Router()
 const { userExtractor } = require('../utils/middleware')
 
+// Async error wrapper function
+const asyncErrorHandler = (fn) => (req, res, next) => {
+  Promise.resolve(fn(req, res, next)).catch(next)
+}
+
 blogsRouter.get('/', (request, response) => {
   Blog.find({})
     .populate('user', { username: 1, name: 1, id: 1 })
@@ -10,7 +15,7 @@ blogsRouter.get('/', (request, response) => {
     })
 })
 
-blogsRouter.post('/', userExtractor, async (request, response) => {
+blogsRouter.post('/', userExtractor, asyncErrorHandler(async (request, response) => {
   const user = request.user
   const blog = new Blog(request.body)
 
@@ -27,9 +32,9 @@ blogsRouter.post('/', userExtractor, async (request, response) => {
   const savedBlog = await blog.save()
 
   response.status(201).json(savedBlog)
-})
+}))
 
-blogsRouter.delete('/:id', userExtractor, async (request, response) => {
+blogsRouter.delete('/:id', userExtractor, asyncErrorHandler(async (request, response) => {
   const user = request.user
   const blog = await Blog.findById(request.params.id)
 
@@ -45,9 +50,9 @@ blogsRouter.delete('/:id', userExtractor, async (request, response) => {
 
   await blog.deleteOne()
   response.status(204).end()
-})
+}))
 
-blogsRouter.put('/:id', async (request, response) => {
+blogsRouter.put('/:id', asyncErrorHandler(async (request, response) => {
   const { title, author, url, likes } = request.body
 
   const blog = await Blog.findById(request.params.id)
@@ -64,6 +69,6 @@ blogsRouter.put('/:id', async (request, response) => {
   const updatedBlog = await blog.save()
 
   response.json(updatedBlog)
-})
+}))
 
 module.exports = blogsRouter
