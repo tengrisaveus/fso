@@ -93,11 +93,10 @@ const App = () => {
 
   const handleLike = async blog => {
     const updatedBlog ={ ...blog, likes: blog.likes +  1 }
-    
+
     try {
       const response = await blogService.update(blog.id, updatedBlog)
       setBlogs(blogs.map(b => b.id === blog.id ? response : b))
-      setLikes(response.likes)
     }catch(error){
       console.error(error)
     }
@@ -111,7 +110,7 @@ const App = () => {
         setNotification({ message: `Blog ${blog.title} removed`, type: 'success' })
         setTimeout(() => {
           setNotification({ message: null, type: null })
-        }, 5000) 
+        }, 5000)
       }catch(error){
         setNotification({
           message: 'Failed to remove blog',
@@ -124,11 +123,11 @@ const App = () => {
     }
   }
 
-   const loginForm = () => (
+  const loginForm = () => (
     <form onSubmit={handleLogin}>
       <div>
         username
-          <input
+        <input
           type="text"
           value={username}
           name="Username"
@@ -137,7 +136,7 @@ const App = () => {
       </div>
       <div>
         password
-          <input
+        <input
           type="password"
           value={password}
           name="Password"
@@ -145,10 +144,10 @@ const App = () => {
         />
       </div>
       <button type="submit">login</button>
-    </form>      
+    </form>
   )
 
-   if (user === null) {
+  if (user === null) {
     return (
       <div>
         <h2>Log in to application</h2>
