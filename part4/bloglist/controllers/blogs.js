@@ -53,7 +53,7 @@ blogsRouter.delete('/:id', userExtractor, asyncErrorHandler(async (request, resp
 }))
 
 blogsRouter.put('/:id', asyncErrorHandler(async (request, response) => {
-  const { title, author, url, likes } = request.body
+  const { title, author, url, likes, user } = request.body
 
   const blog = await Blog.findById(request.params.id)
 
@@ -65,6 +65,7 @@ blogsRouter.put('/:id', asyncErrorHandler(async (request, response) => {
   blog.author = author
   blog.url = url
   blog.likes = likes
+  blog.user = user
 
   const updatedBlog = await blog.save()
 
