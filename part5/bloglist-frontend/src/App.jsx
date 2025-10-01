@@ -12,6 +12,7 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [notification, setNotification] = useState({ message: null, type: null })
+  const [likes, setLikes] = useState(0)
 
   const blogFormRef = useRef()
 
@@ -91,6 +92,18 @@ const App = () => {
     setPassword('')
   }
 
+  const handleLike = async blog => {
+    const updatedBlog ={ ...blog, likes: blog.likes +  1 }
+    
+    try {
+      const response = await blogService.update(blog.id, updatedBlog)
+      setBlogs(blogs.map(b => b.id === blog.id ? response : b))
+      setLikes(response.likes)
+    }catch(error){
+      console.error(error)
+    }
+  }
+
    const loginForm = () => (
     <form onSubmit={handleLogin}>
       <div>
@@ -133,11 +146,11 @@ const App = () => {
         {user.username} logged in
         <button onClick={handleLogout}>logout</button>
       </p>
-      <Toggleable buttonLabel ="new blog" ref={blogFormRef}>
+      <Toggleable buttonLabel ="create new blog" ref={blogFormRef}>
         <BlogForm createBlog={addBlog} />
       </Toggleable>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} handleLike={handleLike} />
       )}
     </div>
   )

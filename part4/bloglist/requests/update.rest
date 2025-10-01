@@ -1,8 +1,8 @@
-POST http://localhost:3003/api/blogs
+PUT http://localhost:3003/api/blogs/689b6c58bf705ab3fb2f9d03
 Content-Type: application/json
 
 {
-  "user": "5a43e6b6c37f3d065eaaa581",
+  "user": "689b6c58bf705ab3fb2f9d03",
   "likes": 1,
   "author": "Joel Spolsky",
   "title": "The Joel Test: 12 Steps to Better Code",
